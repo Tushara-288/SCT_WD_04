@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple To-Do App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .todo-input {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    input[type="text"] {
+      width: 300px;
+    }
+    input[type="datetime-local"] {
+      width: 250px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    li {
+      background: white;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+    .task-info {
+      flex: 1;
+      text-align: left;
+    }
+    .task-buttons button {
+      margin-left: 8px;
+      padding: 6px 12px;
+      font-size: 14px;
+      border: none;
+      border-radius: 5px;
+    }
+    .edit {
+      background-color: #ffc107;
+      color: #000;
+    }
+    .complete {
+      background-color: #007bff;
+      color: white;
+    }
+    .delete {
+      background-color: #dc3545;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>My To-Do List</h1>
+
+  <div class="todo-input">
+    <input type="text" id="taskInput" placeholder="Enter your task" />
+    <input type="datetime-local" id="dateTimeInput" />
+    <button onclick="addTask()">Add Task</button>
+  </div>
+
+  <ul id="taskList"></ul>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const dateTimeInput = document.getElementById('dateTimeInput');
+    const taskList = document.getElementById('taskList');
+
+    function addTask() {
+      const taskText = taskInput.value.trim();
+      const taskTime = dateTimeInput.value;
+
+      if (!taskText) {
+        alert("Please enter a task.");
+        return;
+      }
+
+      const li = document.createElement("li");
+      const infoDiv = document.createElement("div");
+      infoDiv.className = "task-info";
+      infoDiv.innerHTML = `<strong>${taskText}</strong><br><small>${taskTime}</small>`;
+
+      const buttonDiv = document.createElement("div");
+      buttonDiv.className = "task-buttons";
+
+      const editBtn = document.createElement("button");
+      editBtn.textContent = "Edit";
+      editBtn.className = "edit";
+      editBtn.onclick = () => editTask(infoDiv);
+
+      const completeBtn = document.createElement("button");
+      completeBtn.textContent = "✔";
+      completeBtn.className = "complete";
+      completeBtn.onclick = () => {
+        infoDiv.classList.toggle("completed");
+      };
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "🗑";
+      deleteBtn.className = "delete";
+      deleteBtn.onclick = () => {
+        taskList.removeChild(li);
+      };
+
+      buttonDiv.appendChild(editBtn);
+      buttonDiv.appendChild(completeBtn);
+      buttonDiv.appendChild(deleteBtn);
+
+      li.appendChild(infoDiv);
+      li.appendChild(buttonDiv);
+      taskList.appendChild(li);
+
+      taskInput.value = "";
+      dateTimeInput.value = "";
+    }
+
+    function editTask(infoDiv) {
+      const current = infoDiv.innerText.split("\n");
+      const taskName = current[0].trim();
+      const taskDate = current[1] ? current[1].trim() : '';
+
+      const newTask = prompt("Edit task name:", taskName);
+      if (newTask !== null) {
+        const newDate = prompt("Edit date/time (YYYY-MM-DD HH:MM):", taskDate);
+        infoDiv.innerHTML = `<strong>${newTask}</strong><br><small>${newDate}</small>`;
+      }
+    }
+  </script>
+
+</body>
+</html>
